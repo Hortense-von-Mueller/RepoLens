@@ -73,6 +73,20 @@
         </div>
         <div id="findings" class="findings-list"></div>
         <div class="report-footnote">This automated scan samples public repository files and looks for common signals. It can miss issues and produce false positives; verify each finding before acting.</div>
+
+        <section class="prompt-section" aria-labelledby="prompt-title">
+          <div class="prompt-heading">
+            <div>
+              <div class="section-kicker">Ready for your coding assistant</div>
+              <h2 id="prompt-title">Prompt recommendations</h2>
+            </div>
+            <button id="copy-recommendations" class="copy-button" type="button">Copy all <span aria-hidden="true">▣</span></button>
+          </div>
+          <p class="prompt-description">A numbered prompt based on this scan. Review the heuristic findings before applying changes.</p>
+          <label for="recommendation-text" class="visually-hidden">Numbered prompt recommendations</label>
+          <textarea id="recommendation-text" class="recommendation-text" readonly spellcheck="false"></textarea>
+          <p id="copy-status" class="copy-status" role="status" aria-live="polite"></p>
+        </section>
       </section>
     </main>
 

@@ -16,4 +16,6 @@ Open [http://localhost:3000](http://localhost:3000) and enter a repository URL s
 
 The scan looks for security policies, dependency update configuration and lockfiles, CI workflows, scoped workflow permissions, pinned GitHub Actions, common test/documentation files, and a small set of risky code patterns. It scans up to 48 prioritized files (up to 180 KB each) from public repositories.
 
+The results include a numbered, ready-to-paste prompt based on the findings, with a button to copy the full prompt.
+
 The score is an educational heuristic, not a security audit. It does not inspect private repositories, runtime behavior, dependency vulnerability databases, repository settings, or files outside its sample. Findings can be false positives or miss real problems. GitHub's unauthenticated API rate limits apply.

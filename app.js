@@ -38,6 +38,8 @@ document.querySelector("#new-analysis").addEventListener("click", () => {
   window.scrollTo({ top: 0, behavior: "smooth" });
 });
 
+document.querySelector("#copy-recommendations").addEventListener("click", copyRecommendations);
+
 function parseRepositoryUrl(value) {
   try {
     const url = new URL(value.trim());
@@ -279,7 +281,53 @@ function renderReport(report) {
   } else {
     findings.replaceChildren(...report.findings.map(createFinding));
   }
+  const recommendationText = document.querySelector("#recommendation-text");
+  recommendationText.value = buildRecommendationPrompt(report);
+  document.querySelector("#copy-recommendations").disabled = report.findings.length === 0;
+  document.querySelector("#copy-status").textContent = report.findings.length === 0
+    ? "No recommendations to copy from this scan."
+    : "";
   statusMessage.textContent = `Scan complete · ${report.scannedCount} files reviewed${report.eligibleCount > report.scannedCount ? ` (${report.eligibleCount} sampled)` : ""}.${report.treeTruncated ? " GitHub returned a partial file tree." : ""}`;
+}
+
+function buildRecommendationPrompt(report) {
+  const repository = report.repo.full_name || `${report.repo.owner.login}/${report.repo.name}`;
+  if (report.findings.length === 0) {
+    return `Review ${repository} independently for security and maintainability issues. This heuristic scan found no review signals, which does not establish that the repository is free of issues.`;
+  }
+
+  const recommendations = report.findings.map((finding, index) => {
+    const location = finding.path ? ` Location: ${finding.path}.` : "";
+    return `${index + 1}. [${finding.severity.toUpperCase()}] ${finding.title}.${location}\n   Finding: ${finding.detail}\n   Prompt: Inspect the relevant code or configuration, verify whether this finding applies, and if confirmed make the smallest safe fix consistent with the project. Add or update a focused test where appropriate. If it is a false positive, leave the code unchanged and explain why.`;
+  });
+
+  return [
+    `Review and address the following scan recommendations in ${repository}.`,
+    "First inspect the surrounding code and verify each heuristic finding; do not assume it is a confirmed vulnerability. Make only relevant changes, preserve existing behavior, add or update focused tests, and run the appropriate checks. Do not expose secrets. Summarize fixes, tests, and any findings left unresolved or determined to be false positives.",
+    "",
+    ...recommendations
+  ].join("\n\n");
+}
+
+async function copyRecommendations() {
+  const text = document.querySelector("#recommendation-text");
+  const status = document.querySelector("#copy-status");
+  const button = document.querySelector("#copy-recommendations");
+  try {
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      await navigator.clipboard.writeText(text.value);
+    } else {
+      text.focus();
+      text.select();
+      if (!document.execCommand("copy")) throw new Error("Clipboard access is unavailable.");
+    }
+    status.textContent = "All numbered recommendations copied.";
+  } catch {
+    text.focus();
+    text.select();
+    status.textContent = "Copy was blocked. The prompt is selected; press Ctrl+C or Command+C to copy it.";
+  }
+  button.blur();
 }
 
 function stat(label, value) {
