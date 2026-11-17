@@ -1,0 +1,9 @@
+{
+  "name": "repo-analyzer",
+  "version": "1.0.0",
+  "private": true,
+  "description": "A lightweight web app for heuristic GitHub repository analysis",
+  "scripts": {
+    "start": "node server.js"
+  }
+}

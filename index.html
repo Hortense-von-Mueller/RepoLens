@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="theme-color" content="#f6f7f5">
+    <title>RepoLens — GitHub repository health check</title>
+    <link rel="stylesheet" href="/styles.css">
+    <script src="/app.js" defer></script>
+  </head>
+  <body>
+    <header class="topbar">
+      <a class="brand" href="/" aria-label="RepoLens home">
+        <span class="brand-mark" aria-hidden="true">R</span>
+        <span>repolens<span class="brand-period">.</span></span>
+      </a>
+      <span class="topbar-note"><span class="live-dot"></span> Open-source repository check</span>
+    </header>
+
+    <main>
+      <section class="hero">
+        <div class="eyebrow"><span class="eyebrow-line"></span> A clearer view of your codebase</div>
+        <h1>Know what your repo<br><span>might be missing.</span></h1>
+        <p class="hero-copy">A quick, practical scan for security signals, code hygiene, and engineering essentials. No setup. No token required.</p>
+
+        <form id="analyze-form" class="url-form">
+          <label for="repo-url" class="visually-hidden">GitHub repository URL</label>
+          <span class="input-icon" aria-hidden="true">↗</span>
+          <input id="repo-url" name="repo" type="url" autocomplete="url" placeholder="https://github.com/owner/repository" required>
+          <button id="analyze-button" type="submit"><span>Analyze repo</span><span aria-hidden="true">→</span></button>
+        </form>
+        <p class="form-hint">Public GitHub repositories only <span>·</span> Results are heuristic, not a security audit</p>
+        <p id="status" class="status" role="status" aria-live="polite"></p>
+      </section>
+
+      <section id="results" class="results" aria-live="polite" hidden>
+        <div class="results-heading">
+          <div>
+            <div class="section-kicker">Repository report</div>
+            <h2 id="repo-name"></h2>
+            <a id="repo-link" class="repo-link" target="_blank" rel="noopener noreferrer"></a>
+          </div>
+          <button id="new-analysis" class="text-button" type="button">Analyze another <span aria-hidden="true">↗</span></button>
+        </div>
+
+        <div class="overview-grid">
+          <article class="score-card">
+            <div class="card-label">Repository health score</div>
+            <div class="score-content">
+              <div id="score-ring" class="score-ring">
+                <div class="score-inner"><strong id="score-value">—</strong><span>out of 10</span></div>
+              </div>
+              <div class="score-copy">
+                <h3 id="score-title"></h3>
+                <p id="score-summary"></p>
+              </div>
+            </div>
+            <div id="repo-stats" class="repo-stats"></div>
+          </article>
+          <article class="coverage-card">
+            <div class="card-label">What this scan covers</div>
+            <div id="check-list" class="check-list"></div>
+            <p class="coverage-note">A missing signal is not proof of a vulnerability. Private settings, runtime behavior, and unscanned files are not evaluated.</p>
+          </article>
+        </div>
+
+        <div class="findings-heading">
+          <div>
+            <div class="section-kicker">What we found</div>
+            <h2>Signals to review <span id="finding-count" class="count-pill">0</span></h2>
+          </div>
+          <p>Start with critical and high-priority items.</p>
+        </div>
+        <div id="findings" class="findings-list"></div>
+        <div class="report-footnote">This automated scan samples public repository files and looks for common signals. It can miss issues and produce false positives; verify each finding before acting.</div>
+      </section>
+    </main>
+
+    <footer>
+      <span class="brand-mini">repolens<span class="brand-period">.</span></span>
+      <span>Useful signals. Better questions.</span>
+      <span>Built for a first look, not a final verdict.</span>
+    </footer>
+  </body>
+</html>
